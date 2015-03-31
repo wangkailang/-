@@ -53,6 +53,33 @@ var updatebar = function(x){
     percentage=0;
   }
   
-  $('#timerBar').css('width',percentage+'%');
+  $('#timerBar').css('width',percentage+'%'); 
   video.currentTime = maxduration*persentage / 100;
 }
+
+//缓冲属性
+var startBuffer = function(){
+  var maxduration = video[0].duration;
+  var currentBuffer = video[0].buffered.end(0);
+  var percentage = 100*currentBuffer / maxduration;
+  $('#bufferBar').css('width',percentage+'%');
+  
+  if(currentBuffer<maxduration){
+    setTimeout(startBuffer,500);
+  }
+}
+setTimeout(startBuffer,500);
+
+//音量控制,两种方法，静音按钮/音量栏
+$('#muted').click(function(){
+  video[0].muted = !video[0].muted;
+  return false;
+});
+
+$('#volumeBar').on('mousedown',function(e){
+  var position = e.pageX - volume.offset().left;
+  var percentage = 100*position / volume.width();
+  $('#volumeBar').css('width',percentage+'%');
+  video[0].volume = percentage / 100;
+});
+
