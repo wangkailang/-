@@ -1,0 +1,58 @@
+#获取 var video = $("#myVideo");
+//视频播放暂停，继续
+$('btnPlay').on('click',function(){
+  if(video[0].paused){ //video[0]，或者video.get(0)获取DOM对象
+   video[0].play();
+  }else{
+   video[0].pause();
+  }
+});
+
+//视频进度条，视频总时间，播放时间
+video.on('loadedmetadata',function(){
+  $('#dutation').text(video.duration);
+});
+video.on('timeupdate',function(){
+  $('#current').text(video.currentTime);
+});
+video.on('timeupdate',function(){
+  var currentPos = video.currentTime; //获取当前时间
+  var maxduration = video.duration;   //获取总时间
+  var percentage = 100*currentPos / maxduration;
+  $('#timeBar').css('width',percentage +'%');
+});
+
+//拖拽操作，视频进度拖放
+var timeDrag = false;
+$('#progressBar').mousedown(function(e){
+  timeDrag = true;
+  updatebar(e.pageX);
+});
+$(document).mouseup(function(e){
+  if(timeDrag){
+    timeDrag = false;
+    updatabar(e.pageX);
+  }
+});
+$(document).mousemove(function(e){
+  if(timeDrag){
+    updatebar(e.pageX);
+  }
+});
+//更新进度条控制
+var updatebar = function(x){
+  var progress = $('#progressBar');
+  var maxduration = video.duration();
+  var position = x- progress.offset().left;
+  var percentage = 100*position / progress.width();
+  
+  if(percentage>100){
+    percentage = 100;
+  }
+  if(persentage<0){
+    percentage=0;
+  }
+  
+  $('#timerBar').css('width',percentage+'%');
+  video.currentTime = maxduration*persentage / 100;
+}
