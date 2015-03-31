@@ -83,3 +83,12 @@ $('#volumeBar').on('mousedown',function(e){
   video[0].volume = percentage / 100;
 });
 
+//全屏播放
+$('#fullscreen').on('click',function(){
+  //for webkit
+  video[0].webkitEnterFullscreen();
+  //for firefox
+  video[0].mozRequestFullScreen();
+  
+  return false;
+});
