@@ -1,0 +1,57 @@
+1,音频开发注意细节
+video.muted = true  //表示静音
+(1),
+$('.soundBar').on('mousedown',function(e){
+  soundStop = false;  //改变开静音状态判断,声明声音开启(调节声音就表明声音存在)
+  video.muted = false; //开启声音操作
+  
+  //改变声音图像的形状，改为声音开启显示图像
+  $('.stop-or-go i').eq(0).attr('class','icon-volume-up');
+  $('.stop-or-go i').eq(1).css('display','none');
+  
+  var vol = $(this);
+  var volumeLeft = vol.children().eq(0).offset().left;
+  
+  //音量条长度，以百分比显示
+  $('.soundBar-cotrol').css('width',(100*(e.pageX-volumeLeft)/vol.width())+'%');
+  
+  //音量大小，在[0,1]之间
+  video.volume = (e.pageX-volumeLeft)/vol.width();
+  
+  //鼠标点击状态下移动鼠标
+  $(document).on('mousemove',function(e){
+  
+    //鼠标相对于浏览器左边距离像素值
+    var mouseLeft = e.pageX;
+    
+    //防止声音显示进度条超出声音条范围
+    if(mouseLeft<volumeLeft){
+      //控制左边，声音为0时，声音头像变为静音图像
+      mouseLeft = volumeLeft;
+      $('.stop-or-go i').eq(0).attr('class','icon-volume-off');
+      $('.stop-or-go i').eq(1).css('display','inline-block');
+    }else if(mouseLeft>volumeLeft+vol.width()){
+      //控制右边
+      mouseLeft = volumeLeft+vol.width();
+    }
+    
+    //表示声音大小声音条(高亮声音条)像素长度
+    var len = -volumeLeft+mouseLeft;
+     //表示声音大小声音条(高亮声音条)百分比
+    var soundper = 100*len / vol.width();
+    //声音大小声音条(高亮声音条)百分比
+    $('.soundBar-cotrol').css('width',soundper+'%');
+    //音量调节
+    video.volume = soundper / 100;
+    
+    //取消mousemove默认事件
+    return false;
+  });
+  //取消mousedown默认事件
+  return false;
+});
+//鼠标松开取消鼠标绑定
+$(document).on('mouseup',function(){
+  $(document).unbind('mousemove');
+  return false;
+});
