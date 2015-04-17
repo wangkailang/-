@@ -1,6 +1,42 @@
 1,音频开发注意细节
 video.muted = true  //表示静音
-(1),
+<--html部分-->
+<div class="sound">
+      <div class="stop-or-go">
+         <i class="icon-volume-up"></i>
+        <i class="icon-remove" style="display:none;font-size:12px;margin-top:-10px;"></i> 
+      </div>
+    
+    <div class="soundBar">
+        <div class="soundBar-len"></div>
+        <div class="soundBar-cotrol"></div>
+    </div>
+</div>
+
+<--js部分-->
+//音量控制,两种方法，静音按钮/音量栏
+//鼠标点击控制声音开启关闭
+var soundStop = false;
+//以百分比形式存储音频大小
+var soundLen = $('.soundBar-cotrol').width();
+$('.stop-or-go').click(function(){
+  video.muted = !video.muted;
+  if(!soundStop){
+    soundStop = true;
+    $(this).children().eq(0).removeClass('icon-volume-up');
+    $(this).children().eq(0).addClass('icon-volume-off');
+    $(this).children().eq(1).css('display','inline-block');
+    $('.soundBar-cotrol').css('width',0+'%');
+  }else{
+    soundStop = false;
+    $(this).children().eq(0).addClass('icon-volume-up');
+    $(this).children().eq(0).removeClass('icon-volume-off');
+    $(this).children().eq(1).css('display','none');
+    $('.soundBar-cotrol').css('width',soundLen+'%');
+  }
+});
+
+//音量条控制声音大小
 $('.soundBar').on('mousedown',function(e){
   soundStop = false;  //改变开静音状态判断,声明声音开启(调节声音就表明声音存在)
   video.muted = false; //开启声音操作
