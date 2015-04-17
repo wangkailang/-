@@ -1,0 +1,95 @@
+//全屏播放
+var fullscreen = false; 
+//监听键盘ESC事件,全屏状态时键盘“ESC”事件无法监听，故通过video大宽度来模拟监听，事件每隔0.3s判断一次
+setInterval(function(){
+  var videoW = $('#myVideo').width();
+  if(videoW == 800){
+    $('#videoCon').css({
+    width: '800px',
+    position:'static'
+  });
+  $('.fullScreen i').attr('class','icon-resize-full');
+  $('.fullScreen i').attr('title','全屏');
+  fullscreen = false;
+  dbclickFull =false;
+  }
+}, 300);
+
+// 全屏函数，找到支持的方法, 使用需要全屏的 element 调用  
+function launchFullScreen(element) {  
+  if(element.requestFullscreen) {  
+    element.requestFullscreen();  
+  } else if(element.mozRequestFullScreen) {  
+    element.mozRequestFullScreen();  
+  } else if(element.webkitRequestFullscreen) {  
+    element.webkitRequestFullscreen();  
+  } else if(element.msRequestFullscreen) {  
+    element.msRequestFullscreen();  
+  }  
+}  
+// 退出全屏函数 
+function exitFullscreen() {  
+  if(document.exitFullscreen) {  
+    document.exitFullscreen();  
+  } else if(document.mozExitFullScreen) {  
+    document.mozExitFullScreen();  
+  } else if(document.webkitExitFullscreen) {  
+    document.webkitExitFullscreen();  
+  }  
+}  
+
+//单击进行全屏切换和取消全屏切换
+$('.fullScreen').on('click',function(){
+if(!fullscreen){
+  launchFullScreen(video);
+  $('#videoCon').css({
+    width:'100%',
+    position:'fixed',
+    zIndex:21474836475,
+    bottom:'0px',
+  });
+  $(this).children().attr('class','icon-resize-small');
+  $(this).children().attr('title','取消全屏');
+  fullscreen = true;
+  dbclickFull = true;
+}else{
+  exitFullscreen();
+  $('#videoCon').css({
+    width: '800px',
+    position:'static'
+  });
+  $(this).children().attr('class','icon-resize-full');
+  $(this).children().attr('title','全屏');
+  fullscreen = false;
+  dbclickFull = false;
+}
+});
+
+//双击进行全屏切换和取消全屏切换
+var dbclickFull = false;
+$('#myVideo').dblclick(function() {
+  if(!dbclickFull){
+  launchFullScreen(video);
+  $('#videoCon').css({
+    width:'100%',
+    position:'fixed',
+    zIndex:21474836475,
+    bottom:'0px',
+  });
+  $(this).children().attr('class','icon-resize-small');
+  $(this).children().attr('title','取消全屏');
+  dbclickFull = true;
+  fullscreen = true;
+}else{
+  exitFullscreen();
+  $('#videoCon').css({
+    width: '800px',
+    position:'static'
+  });
+  $(this).children().attr('class','icon-resize-full');
+  $(this).children().attr('title','全屏');
+  dbclickFull = false;
+  fullscreen = false;
+}
+console.log(dbclickFull);
+});
